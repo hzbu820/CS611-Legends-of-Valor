@@ -105,8 +105,15 @@ public class HeroFactory {
     }
 
     private static Hero createCustomHero(String heroClass, Scanner scanner) {
-        System.out.print("Enter a name for your hero: ");
-        String customName = scanner.nextLine();
+        String customName;
+        while (true) {
+            System.out.print("Enter a name for your hero (cannot be empty): ");
+            customName = scanner.nextLine().trim();
+            if (!customName.isEmpty()) {
+                break;
+            }
+            System.out.println("Invalid input. Please enter a non-empty name.");
+        }
         return new Hero(customName, heroClass);
     }
 }
