@@ -27,3 +27,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Project-specific files to exclude ###
+48447392.pdf
+Legends of Valor.pdf
+Legends_of_Valor.txt
+MonstersandHeroes.txt
+README.md
+ReadME.MD
