@@ -1,4 +1,3 @@
-
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -47,10 +46,10 @@ public class lovWorld extends World {
 
     @Override
     public void displayMap() {
-        System.out.println("\u001B[36m╔════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╗\u001B[0m");
+        System.out.println("\u001B[36m+--------+--------+--------+--------+--------+--------+--------+--------+\u001B[0m");
 
         for (int i = 0; i < grid.length; i++) {
-            System.out.print("\u001B[36m║\u001B[0m");
+            System.out.print("\u001B[36m|\u001B[0m");
             for (int j = 0; j < grid[i].length; j++) {
                 Space space = grid[i][j];
                 if (space != null && space.getOccupant() != null) {
@@ -80,28 +79,33 @@ public class lovWorld extends World {
                         System.out.print("  \u001B[33m" + symbol + "\u001B[0m     "); // Yellow for koulou
                     } else if (symbol.equals("O")) {
                         System.out.print("  \u001B[91m" + symbol + "\u001B[0m     "); // Light red for obstacle
+                    } else if (symbol.equals("$") || symbol.equals("TC")) {
+                        System.out.print("  \u001B[33m" + symbol + "\u001B[0m     "); // Yellow for treasure chest
+                    } else if (symbol.equals("?")) {
+                        System.out.print("  \u001B[35m" + symbol + "\u001B[0m     "); // Purple for mystery space
                     } else {
                         System.out.print("  " + symbol + "     "); // Default for plain
                     }
                 } else {
                     System.out.print("        "); // Empty space
                 }
-                System.out.print("\u001B[36m║\u001B[0m");
+                System.out.print("\u001B[36m|\u001B[0m");
             }
             System.out.println();
             if (i < grid.length - 1) {
-                System.out.println("\u001B[36m╠════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╣\u001B[0m");
+                System.out.println("\u001B[36m+--------+--------+--------+--------+--------+--------+--------+--------+\u001B[0m");
             }
         }
 
-        System.out.println("\u001B[36m╚════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╝\u001B[0m");
+        System.out.println("\u001B[36m+--------+--------+--------+--------+--------+--------+--------+--------+\u001B[0m");
         
         // Display the map legend with colors
         System.out.println("\n\u001B[1mMAP LEGEND:\u001B[0m");
-        System.out.println("\u001B[32mHN\u001B[0m - Hero Nexus | \u001B[31mMN\u001B[0m - Monster Nexus | \u001B[90m▒▒\u001B[0m - Inaccessible Space");
+        System.out.println("\u001B[32mHN\u001B[0m - Hero Nexus | \u001B[31mMN\u001B[0m - Monster Nexus | \u001B[90m##\u001B[0m - Inaccessible Space");
         System.out.println("P - Plain Space | \u001B[92mB\u001B[0m - Bush Space (+Dexterity) | \u001B[94mC\u001B[0m - Cave Space (+Agility)");
         System.out.println("\u001B[33mK\u001B[0m - Koulou Space (+Strength) | \u001B[91mO\u001B[0m - Obstacle Space (Can be removed)");
-        System.out.println("\u001B[32mH1/H2/H3\u001B[0m - Heroes | \u001B[31mM1/M2/M3\u001B[0m - Monsters\n");
+        System.out.println("\u001B[32mH1/H2/H3\u001B[0m - Heroes | \u001B[31mM1/M2/M3\u001B[0m - Monsters");
+        System.out.println("\u001B[35m?\u001B[0m - Mystery Space | \u001B[33m$\u001B[0m - Treasure Chest | \u001B[33mTC\u001B[0m - Opened Treasure Chest\n");
     }
 
     /**

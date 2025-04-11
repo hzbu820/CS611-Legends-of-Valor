@@ -1,6 +1,10 @@
 /**
- * An abstract class representing generic items in the game, serving as the base class for all item types (e.g., Weapon, Armor, Potion).
- * This class include properties like name, price, and effect. It also provides a toString method for generic items.
+ * Item class - all the stuff you can collect in the game.
+ * 
+ * This is the parent class for weapons, armor, potions, and spells.
+ * Items have a name, cost, and level requirement. You can buy them
+ * at markets, sell them when you need gold, and use them to make
+ * your heroes stronger.
  */
 public abstract class Item {
     protected String name;

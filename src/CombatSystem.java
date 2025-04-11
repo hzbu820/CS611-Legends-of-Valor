@@ -2,25 +2,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles combat interactions between heroes and monsters.
- * Manages targeting, range checks, and reward distribution.
+ * CombatSystem class - where the fighting happens!
+ * 
+ * This system handles all the combat between heroes and monsters,
+ * including targeting, checking attack ranges, rolling for hits,
+ * dealing damage, and distributing rewards when monsters are defeated.
  */
 public class CombatSystem {
     private GridManager gridManager;
 
     /**
-     * Creates a new CombatSystem with a reference to the GridManager.
-     * @param gridManager The GridManager to use for grid access
+     * Sets up a new combat system for our heroes to kick some monster butt.
+     * @param gridManager Gives us access to the game board
      */
     public CombatSystem(GridManager gridManager) {
         this.gridManager = gridManager;
     }
 
     /**
-     * Allows a hero to select a monster to target.
-     * @param hero The hero selecting a target
-     * @param monsters List of monsters that could be targeted
-     * @return The selected monster, or null if no valid target
+     * Lets a hero pick which monster to smack around.
+     * @param hero The hero doing the targeting
+     * @param monsters List of potential monster victims
+     * @return The selected monster, or null if no one's in range
      */
     public Monster selectTargetMonster(Hero hero, List<Monster> monsters) {
         List<Monster> monstersInRange = getMonstersInRange(hero, monsters);
@@ -46,10 +49,10 @@ public class CombatSystem {
     }
 
     /**
-     * Gets all monsters within attack range of a hero.
-     * @param hero The hero to check from
-     * @param monsters List of all monsters to check
-     * @return List of monsters within range
+     * Finds all the monsters close enough to attack.
+     * @param hero The hero looking for targets
+     * @param monsters All the monsters on the board
+     * @return The monsters that are in whacking distance
      */
     public List<Monster> getMonstersInRange(Hero hero, List<Monster> monsters) {
         List<Monster> monstersInRange = new ArrayList<>();
@@ -71,10 +74,10 @@ public class CombatSystem {
     }
 
     /**
-     * Gets all heroes within attack range of a monster.
-     * @param monster The monster to check from
-     * @param heroes List of all heroes to check
-     * @return List of heroes within range
+     * Finds all the heroes a monster can reach to attack.
+     * @param monster The monster looking for trouble
+     * @param heroes All the heroes on the board
+     * @return The heroes within claw-swiping distance
      */
     public List<Hero> getHeroesInRange(Monster monster, List<Hero> heroes) {
         List<Hero> inRangeHeroes = new ArrayList<>();
@@ -100,10 +103,10 @@ public class CombatSystem {
     }
 
     /**
-     * Executes an attack from a monster to heroes in range.
-     * @param monster The attacking monster
-     * @param heroes List of potential hero targets
-     * @return true if attack was successful, false otherwise
+     * Makes a monster attack the nearest hero.
+     * @param monster The monster doing the attacking
+     * @param heroes Potential hero targets
+     * @return true if the monster successfully attacked someone
      */
     public boolean monsterAttack(Monster monster, List<Hero> heroes) {
         List<Hero> heroesInRange = getHeroesInRange(monster, heroes);
@@ -130,9 +133,9 @@ public class CombatSystem {
     }
 
     /**
-     * Distributes rewards to heroes when a monster is defeated.
-     * @param monster The defeated monster
-     * @param heroes List of heroes to receive rewards
+     * Gives out gold and XP when a monster gets defeated.
+     * @param monster The poor creature that just died
+     * @param heroes The victorious heroes getting the loot
      */
     public void distributeMonsterRewards(Monster monster, List<Hero> heroes) {
         if (monster == null || heroes == null || heroes.isEmpty()) {
@@ -156,10 +159,10 @@ public class CombatSystem {
     }
 
     /**
-     * Checks if a hero is in battle (has monsters in range).
-     * @param hero The hero to check
-     * @param monsters List of all monsters
-     * @return true if hero is in battle, false otherwise
+     * Checks if a hero is currently engaged in battle.
+     * @param hero The hero we're checking
+     * @param monsters All monsters on the map
+     * @return true if there are monsters nearby ready to fight
      */
     public boolean isHeroInBattle(Hero hero, List<Monster> monsters) {
         if (!hero.isAlive()) {
@@ -184,10 +187,10 @@ public class CombatSystem {
     }
 
     /**
-     * Checks if win conditions have been met.
-     * @param heroes List of heroes
-     * @param monsters List of monsters
-     * @return true if game is over, false otherwise
+     * Checks if anyone has won the game yet.
+     * @param heroes The hero team
+     * @param monsters The monster team
+     * @return true if the game is over, false if the battle continues
      */
     public boolean checkWinCondition(List<Hero> heroes, List<Monster> monsters) {
         Space[][] grid = gridManager.getGrid();
@@ -214,9 +217,9 @@ public class CombatSystem {
     }
 
     /**
-     * Checks if a hero is in a Nexus space.
+     * Checks if a hero is hanging out in their home base.
      * @param hero The hero to check
-     * @return true if the hero is in a Nexus, false otherwise
+     * @return true if they're in their nexus, false otherwise
      */
     public boolean isInNexus(Hero hero) {
         Space[][] grid = gridManager.getGrid();
@@ -228,9 +231,9 @@ public class CombatSystem {
     }
 
     /**
-     * Handles the logic to remove obstacles near a hero.
-     * @param hero The hero removing the obstacle
-     * @return true if an obstacle was removed, false otherwise
+     * Lets a hero clear obstacles out of the way.
+     * @param hero The hero doing the heavy lifting
+     * @return true if they successfully removed an obstacle
      */
     public boolean removeObstacle(Hero hero) {
         int heroRow = hero.getHeroRow();
@@ -310,8 +313,8 @@ public class CombatSystem {
     }
     
     /**
-     * Respawns a dead hero at their nexus.
-     * @param hero The hero to respawn
+     * Brings a dead hero back to life at their nexus.
+     * @param hero The hero to resurrect
      */
     public void respawnHero(Hero hero) {
         if (!hero.isAlive()) {

@@ -1,8 +1,11 @@
 import java.util.Random;
 
 /**
- * Represents the Monster character type, with unique attributes. This class also contain the attributes effect under
- * different kinds of spells
+ * Monster class - the bad guys you're fighting against.
+ * 
+ * Monsters have damage, defense and dodge attributes that determine how tough they are.
+ * Each monster type has different strengths and weaknesses, and they're affected 
+ * differently by various spell types. They get stronger as their level increases.
  */
 
 public class Monster extends Character implements Attackable<Hero> {
@@ -69,32 +72,44 @@ public class Monster extends Character implements Attackable<Hero> {
 
 
     public void attack(Hero target) {
-        if (target == null || !target.isAlive()) {
+        if (target == null) {
+            System.out.println("Invalid target");
             return;
         }
-        
+
         Random random = new Random();
-        
-        // Calculate damage: monster damage is based on its level and damage attribute
-        double damage = level * baseDamage * 0.1;
         
         // Check if hero can dodge based on agility
         double dodgeChance = target.getCurrentAgility() * 0.002; // 0.2% per agility point
+        
+        // Check if the hero dodges
         if (random.nextDouble() < dodgeChance) {
             // Use CombatLogger for dodge message
             CombatLogger.getInstance().logMonsterAttack(this, target, 0, true);
             return;
         }
         
-        // If hero has armor, reduce damage
-        double reducedDamage = damage - target.getInventory().useArmor();
+        // Calculate base damage: monster damage is based on its level and damage attribute
+        double attackDamage = level * baseDamage * 0.1;
+        
+        // Check for critical hit (10% chance)
+        boolean isCritical = random.nextDouble() < 0.10;
+        double damageMultiplier = isCritical ? 2.0 : 1.0;
+        
+        // Calculate final damage with armor reduction
+        double reducedDamage = (attackDamage * damageMultiplier) - target.getInventory().useArmor();
         int finalDamage = (int) Math.max(reducedDamage, 0);
         
         // Apply damage to hero
         target.takeDamage(finalDamage);
         
-        // Use CombatLogger for attack message
-        CombatLogger.getInstance().logMonsterAttack(this, target, finalDamage, false);
+        // Use appropriate CombatLogger method based on whether it was a critical hit
+        if (isCritical) {
+            // Use dedicated critical hit logger
+            CombatLogger.getInstance().logMonsterCriticalHit(this, target, finalDamage);
+        } else {
+            CombatLogger.getInstance().logMonsterAttack(this, target, finalDamage, false);
+        }
     }
      /*
     For Legends and Valor

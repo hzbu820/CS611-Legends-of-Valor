@@ -1,6 +1,10 @@
 /**
- *  Manages the collection of items a hero possesses, such as weapons, armor, spell, and potions. It provides
- *  methods to add, remove, equip, unequip and use items within the inventory.
+ * Inventory class - the hero's backpack and equipped gear.
+ * 
+ * This class keeps track of all the cool stuff your heroes collect
+ * during their adventures. It manages weapons, armor, potions, and
+ * other items they pick up along the way. Heroes can equip weapons
+ * and armor from their inventory to boost their combat abilities.
  */
 
 import java.util.ArrayList;

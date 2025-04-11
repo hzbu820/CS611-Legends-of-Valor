@@ -1,8 +1,10 @@
 /**
- * An abstract base class representing common attributes and behaviors for all characters in the game, such as health,
- * level, and attributes. This class is extended by more specific character types like Hero and Monster,
- * providing shared functionality such as attacking, defending, and leveling up.
- *
+ * Character class - the foundation for all living things in our game.
+ * 
+ * This is the parent class that both heroes and monsters inherit from.
+ * It handles the basic stuff that all characters need: a name, health,
+ * level, and the ability to take damage and die. Think of it as the 
+ * template that defines what makes a character in our world.
  */
 public abstract class Character {
     protected String name;

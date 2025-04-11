@@ -34,9 +34,25 @@ public class CharacterPositioner {
             return false;
         }
 
+        // Save the old position
+        int oldRow = hero.getHeroRow();
+        int oldCol = hero.getHeroCol();
+        
+        // Move hero to the new position
         hero.setHeroRow(targetRow);
         hero.setHeroCol(targetCol);
+        
+        // Clear the hero from the old position if valid
+        if (gridManager.isValidPosition(oldRow, oldCol)) {
+            Space oldSpace = gridManager.getGrid()[oldRow][oldCol];
+            if (oldSpace.getOccupant() == hero) {
+                oldSpace.setOccupant(null);
+            }
+        }
+        
+        // Set the hero as the occupant of the new position
         gridManager.getGrid()[targetRow][targetCol].setOccupant(hero);
+        
         return true;
     }
 

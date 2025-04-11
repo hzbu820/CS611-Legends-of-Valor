@@ -1,7 +1,10 @@
 /**
- * This class handles the overall game logic, responsible for initializing game components, managing
- * the game loop, and tracking the game state. It handles menu level player interactions, and oversee win/loss conditions.
- *
+ * Game class - the main engine that runs everything.
+ * 
+ * This is the brain of our RPG that handles all the major game logic.
+ * It creates the world, manages heroes and monsters, tracks player
+ * progress, and determines when you win or lose. Think of it as
+ * the dungeon master running the whole show.
  */
 
 import java.util.*;
@@ -60,20 +63,16 @@ public class Game {
                 continue; // Skip to the end of the loop
             }
             
-            // Get player command for the next round
-            System.out.println("Use W/A/S/D for movement, I for info, M for market, and Q to quit.");
-            String command = InputHandler.getInstance().getCommand().toLowerCase();
-            
-            // Process the command
-            processCommand(command);
+            // We no longer need to ask for another command here since the turn system already handled
+            // hero movement during executeRound(). Adding another input request was causing the double-input issue.
         }
         
         System.out.println("Game Over. Thank you for playing!");
     }
     
     /**
-     * Processes a player command outside of the turn system.
-     * @param command The command to process
+     * Handles player commands outside of battle turns.
+     * @param command What the player wants to do
      */
     private void processCommand(String command) {
         switch (command) {
@@ -119,9 +118,9 @@ public class Game {
     }
     
     /**
-     * Attempts to move the heroes on the map.
-     * @param direction The direction to move
-     * @return true if movement was successful, false otherwise
+     * Tries to move heroes around the map.
+     * @param direction Which way to go (w/a/s/d)
+     * @return true if we could move, false if we hit a wall
      */
     private boolean attemptMove(String direction) {
         boolean moveSuccessful = false;
@@ -150,7 +149,7 @@ public class Game {
     }
     
     /**
-     * Handles encounters with monsters while exploring.
+     * Handles running into monsters while exploring.
      */
     private void explore() {
         // This is now handled within the turn system
@@ -158,7 +157,7 @@ public class Game {
     }
     
     /**
-     * Enters the market for trading.
+     * Opens the market so heroes can buy and sell stuff.
      */
     private void enterMarket() {
         System.out.println("\nWelcome to the Market! Select a hero to trade with:");
@@ -178,7 +177,7 @@ public class Game {
     }
     
     /**
-     * Displays detailed information about all heroes.
+     * Shows detailed info about your heroes.
      */
     private void showHeroStats() {
         System.out.println("\nSelect a hero to view detailed information:");
@@ -195,5 +194,34 @@ public class Game {
         } else if (heroChoice != 0) {
             gameUI.displayErrorMessage("Invalid hero selection.");
         }
+    }
+
+    protected void displayGameInstructions() {
+        System.out.println("\n=== Legends of Valor Instructions ===");
+        System.out.println("In this game, heroes must defeat monsters to protect the kingdom.");
+        System.out.println("Move your heroes with 'w' (up), 'a' (left), 's' (down), 'd' (right).");
+        System.out.println("Enter the market at nexus spaces to buy items.");
+        System.out.println("Attack monsters when they are within range.");
+        System.out.println("Win by reaching the monster's nexus or defeating all monsters.");
+        System.out.println("Lose if a monster reaches your nexus.");
+        System.out.println("\nMap Legend:");
+        System.out.println("  HN - Hero Nexus");
+        System.out.println("  MN - Monster Nexus");
+        System.out.println("  H1, H2, H3 - Heroes");
+        System.out.println("  M1, M2, M3 - Monsters");
+        System.out.println("  ▒▒ - Inaccessible");
+        System.out.println("  B - Bush (Dexterity boost)");
+        System.out.println("  C - Cave (Agility boost)");
+        System.out.println("  K - Koulou (Strength boost)");
+        System.out.println("  ★ - Treasure Chest (Contains gold, experience, and possibly items!)");
+        System.out.println("  TC - Opened Treasure Chest");
+        System.out.println("\nSpecial Commands:");
+        System.out.println("  i - Show inventory");
+        System.out.println("  m - Show map");
+        System.out.println("  q - Quit game");
+        System.out.println("  t - Teleport to another hero");
+        System.out.println("  r - Recall to nexus");
+        System.out.println("  e - Show hero stats");
+        System.out.println("==================================\n");
     }
 }

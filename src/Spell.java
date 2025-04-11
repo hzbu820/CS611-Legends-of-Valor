@@ -1,8 +1,9 @@
-
-
 /**
- * Represents a spell that characters can cast in battle, providing magical effects. This class include attributes like
- * manaCost, damage, and spellType.
+ * Spell class - the magical abilities in our game.
+ * 
+ * Spells deal damage and have special effects like reducing defense,
+ * damage output, or dodge chance depending on their type (fire, ice, lightning).
+ * Each spell costs mana to cast.
  */
 
 public class Spell extends Item implements Consumable {

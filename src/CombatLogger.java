@@ -192,6 +192,48 @@ public class CombatLogger {
     }
     
     /**
+     * Logs a critical hit from a hero to a monster with dramatic formatting
+     * @param hero The hero that landed the critical hit
+     * @param monster The monster that was hit
+     * @param damage The damage dealt
+     */
+    public void logCriticalHit(Hero hero, Monster monster, int damage) {
+        String message = BOLD + GREEN + "CRITICAL HIT! " + hero.getName() + RESET + " strikes " + 
+                         BOLD + RED + monster.getName() + RESET + " for " + 
+                         BOLD + RED + damage + RESET + " damage!";
+        
+        // Add monster health update
+        if (monster.isAlive()) {
+            message += " " + RED + monster.getName() + " HP: " + monster.getCurrentHealth() + "/" + monster.getHealth() + RESET;
+        } else {
+            message += " " + RED + BOLD + monster.getName() + " has been defeated!" + RESET;
+        }
+        
+        logAndPrint(message);
+    }
+    
+    /**
+     * Logs a critical hit from a monster to a hero with dramatic formatting
+     * @param monster The monster that landed the critical hit
+     * @param hero The hero that was hit
+     * @param damage The damage dealt
+     */
+    public void logMonsterCriticalHit(Monster monster, Hero hero, int damage) {
+        String message = BOLD + RED + "CRITICAL HIT! " + monster.getName() + RESET + " strikes " + 
+                         BOLD + GREEN + hero.getName() + RESET + " for " + 
+                         BOLD + RED + damage + RESET + " damage!";
+        
+        // Add hero health update
+        if (hero.isAlive()) {
+            message += " " + GREEN + hero.getName() + " HP: " + hero.getCurrentHealth() + "/" + hero.getHealthPoints() + RESET;
+        } else {
+            message += " " + GREEN + BOLD + hero.getName() + " has fainted!" + RESET;
+        }
+        
+        logAndPrint(message);
+    }
+    
+    /**
      * Logs and prints a message, adding it to combat history
      * @param message The message to log
      */

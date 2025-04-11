@@ -25,11 +25,20 @@ public class InputHandler {
 
     public String getCommand() {
         try {
-            if (scanner.hasNextLine()) {
-                return scanner.nextLine();
-            } else {
-                return "Q"; // Default to quit if no line is available
+            String input = "";
+            // Keep prompting until a non-empty input is provided
+            while (input.trim().isEmpty()) {
+                if (scanner.hasNextLine()) {
+                    input = scanner.nextLine().trim();
+                    // If input is still empty, just continue without error message
+                    if (input.isEmpty()) {
+                        continue;
+                    }
+                } else {
+                    return "Q"; // Default to quit if no line is available
+                }
             }
+            return input;
         } catch (NoSuchElementException e) {
             System.out.println("No input available, exiting the game.");
             return "Q";

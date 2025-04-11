@@ -5,18 +5,18 @@
 public class MovementSystem {
     private GridManager gridManager;
     private CharacterPositioner positioner;
-    private TerrainEffectHandler terrainHandler;
+    private TerrainEffectHandler terrainEffectHandler;
 
     /**
      * Creates a new MovementSystem with references to required systems.
      * @param gridManager The GridManager for grid access
      * @param positioner The CharacterPositioner for updating positions
-     * @param terrainHandler The TerrainEffectHandler for applying terrain effects
+     * @param terrainEffectHandler The TerrainEffectHandler for applying terrain effects
      */
-    public MovementSystem(GridManager gridManager, CharacterPositioner positioner, TerrainEffectHandler terrainHandler) {
+    public MovementSystem(GridManager gridManager, CharacterPositioner positioner, TerrainEffectHandler terrainEffectHandler) {
         this.gridManager = gridManager;
         this.positioner = positioner;
-        this.terrainHandler = terrainHandler;
+        this.terrainEffectHandler = terrainEffectHandler;
     }
 
     /**
@@ -70,14 +70,23 @@ public class MovementSystem {
                 return false;
             }
             
+            // Check if the new space is a MysterySpace or TreasureChest before moving
+            boolean isMysterySpace = grid[newRow][newCol] instanceof MysterySpace;
+            boolean isTreasureChest = grid[newRow][newCol] instanceof TreasureChest;
+            
             // Remove current terrain effect before moving
             try {
-                terrainHandler.removeTerrainEffect(hero, grid[currentRow][currentCol]);
+                terrainEffectHandler.removeTerrainEffect(hero, grid[currentRow][currentCol]);
             } catch (Exception e) {
                 System.out.println("Error removing terrain effect: " + e.getMessage());
                 // Continue with the move anyway
             }
 
+            // Handle special spaces BEFORE updating position
+            if (isMysterySpace || isTreasureChest) {
+                handleSpecialSpaces(hero, grid[newRow][newCol], newRow, newCol);
+            }
+            
             // Set new location for the hero
             if (!positioner.setHeroLocation(hero, newRow, newCol)) {
                 System.out.println("Failed to set hero location to [" + newRow + "," + newCol + "]");
@@ -94,7 +103,7 @@ public class MovementSystem {
 
             // Apply terrain effect after moving
             try {
-                terrainHandler.applyTerrainEffect(hero, grid[newRow][newCol]);
+                terrainEffectHandler.applyTerrainEffect(hero, grid[newRow][newCol]);
             } catch (Exception e) {
                 System.out.println("Error applying terrain effect: " + e.getMessage());
                 // Continue anyway
@@ -152,7 +161,7 @@ public class MovementSystem {
 
         // Remove terrain effect from current space (with error handling)
         try {
-            terrainHandler.removeTerrainEffect(teleportingHero, grid[teleportingHeroRow][teleportingHeroCol]);
+            terrainEffectHandler.removeTerrainEffect(teleportingHero, grid[teleportingHeroRow][teleportingHeroCol]);
         } catch (Exception e) {
             System.out.println("Error removing terrain effect: " + e.getMessage());
             // Continue with teleport anyway
@@ -185,7 +194,7 @@ public class MovementSystem {
                 
                 // Apply terrain effect after teleporting (with error handling)
                 try {
-                    terrainHandler.applyTerrainEffect(teleportingHero, grid[newRow][newCol]);
+                    terrainEffectHandler.applyTerrainEffect(teleportingHero, grid[newRow][newCol]);
                 } catch (Exception e) {
                     System.out.println("Error applying terrain effect: " + e.getMessage());
                 }
@@ -215,7 +224,7 @@ public class MovementSystem {
             return false;
         }
         System.out.println("Recalling " + hero.getName());
-        terrainHandler.applyTerrainEffect(hero, gridManager.getGrid()[nexus[0]][nexus[1]]); // Apply terrain effect after recall
+        terrainEffectHandler.applyTerrainEffect(hero, gridManager.getGrid()[nexus[0]][nexus[1]]); // Apply terrain effect after recall
         return true;
     }
 
@@ -361,5 +370,72 @@ public class MovementSystem {
         }
         
         return true;
+    }
+
+    /**
+     * Moves a hero to a new position
+     * @param hero The hero to move
+     * @param newRow Target row
+     * @param newCol Target column
+     * @return true if the move was successful, false otherwise
+     */
+    public boolean moveHero(Hero hero, int newRow, int newCol) {
+        if (!isValidMove(newRow, newCol)) {
+            return false;
+        }
+        
+        // Update hero position
+        hero.setHeroRow(newRow);
+        hero.setHeroCol(newCol);
+        
+        // Get the space at the new position
+        Space[][] grid = gridManager.getGrid();
+        Space targetSpace = grid[newRow][newCol];
+        
+        // Handle special space types
+        handleSpecialSpaces(hero, targetSpace, newRow, newCol);
+        
+        // Apply terrain effect for the new position
+        if (!(targetSpace instanceof TreasureChest)) {
+            terrainEffectHandler.applyTerrainEffect(hero, targetSpace);
+        }
+        
+        // Update the character position in the grid
+        positioner.setHeroLocation(hero, newRow, newCol);
+        
+        return true;
+    }
+    
+    /**
+     * Handles special space interactions
+     * @param hero The hero
+     * @param space The space the hero moved to
+     * @param row The row of the space
+     * @param col The column of the space
+     */
+    private void handleSpecialSpaces(Hero hero, Space space, int row, int col) {
+        if (space instanceof TreasureChest) {
+            TreasureChest chest = (TreasureChest) space;
+            if (!chest.isOpened()) {
+                String result = chest.open(hero);
+                System.out.println(result);
+            }
+        } else if (space instanceof MysterySpace) {
+            // Convert the mystery space into a treasure chest
+            MysterySpace mysterySpace = (MysterySpace) space;
+            TreasureChest chest = mysterySpace.reveal();
+            
+            // Replace the mystery space with the treasure chest in the grid
+            Space[][] grid = gridManager.getGrid();
+            grid[row][col] = chest;
+            
+            // Update the grid in the GridManager
+            gridManager.updateGrid(grid);
+            
+            // Open the chest immediately
+            String result = chest.open(hero);
+            System.out.println("You discovered a hidden treasure chest!");
+            System.out.println(result);
+        }
     }
 } 

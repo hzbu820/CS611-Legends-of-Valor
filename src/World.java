@@ -44,18 +44,18 @@ public class World {
         System.out.println("|   |              World Map              |.");
         System.out.println(" \\_ |                                     |.");
 
-        String doubleLine = "║";
-        String topBorder = "╔═══╦";
-        String middleBorder = "╠═══╬";
-        String bottomBorder = "╚═══╩";
+        String doubleLine = "|";
+        String topBorder = "+---+";
+        String middleBorder = "+---+";
+        String bottomBorder = "+---+";
         for (int j = 0; j < col - 2; j++) {
-            topBorder += "═══╦";
-            middleBorder += "═══╬";
-            bottomBorder += "═══╩";
+            topBorder += "---+";
+            middleBorder += "---+";
+            bottomBorder += "---+";
         }
-        topBorder += "═══╗  |";
-        middleBorder += "═══╣  |";
-        bottomBorder += "═══╝  |";
+        topBorder += "---+  |";
+        middleBorder += "---+  |";
+        bottomBorder += "---+  |";
 
         // Print the top border of the map grid
         System.out.println("    |  " + topBorder);
@@ -64,7 +64,7 @@ public class World {
             System.out.print("    |  " + doubleLine); // Left border
             for (int j = 0; j < col; j++) {
                 if (i == heroRow && j == heroCol) {
-                    System.out.print(" ⚔ " + doubleLine);  // Hero's current position
+                    System.out.print(" X " + doubleLine);  // Hero's current position
                 } else {
                     System.out.print(" " + grid[i][j].getSymbol() + " " + doubleLine); // Display symbol
                 }

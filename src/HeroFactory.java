@@ -21,7 +21,7 @@ public class HeroFactory {
     }
 
     private static void loadHeroesFromFile(String filename, String heroClass) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/data/"+ filename))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FilePathHelper.getDataFilePath(filename)))) {
             // Skip the first line
             reader.readLine();
 
@@ -52,21 +52,38 @@ public class HeroFactory {
 
     public static Hero createHero(String heroClass) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Would you like to choose a pre-defined hero or create a custom one?");
-        System.out.println("1. Choose a hero from the list");
-        System.out.println("2. Create a custom hero");
-
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
-
+        int choice = -1;
+        boolean validChoice = false;
+        
+        while (!validChoice) {
+            System.out.println("Would you like to choose a pre-defined hero or create a custom one?");
+            System.out.println("1. Choose a hero from the list");
+            System.out.println("2. Create a custom hero");
+            
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                
+                if (choice == 1 || choice == 2) {
+                    validChoice = true;
+                } else {
+                    System.out.println("Invalid choice. Please enter 1 or 2.");
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine(); // Clear invalid input
+            }
+        }
+        
         switch (choice) {
             case 1:
                 return chooseHeroFromList(heroClass);
             case 2:
                 return createCustomHero(heroClass, scanner);
             default:
-                System.out.println("Invalid choice. Selecting a default hero.");
-                return availableHeroes.isEmpty() ? null : availableHeroes.get(0);
+                // This should not happen due to the validation above
+                System.out.println("Unexpected error. Please try again.");
+                return createHero(heroClass);
         }
     }
 

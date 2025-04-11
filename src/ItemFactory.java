@@ -79,7 +79,7 @@ public class ItemFactory {
     private static List<ItemData> loadItemData(String filename, int level) {
         List<ItemData> items = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/data/" + filename))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FilePathHelper.getDataFilePath(filename)))) {
             // Skip the first line
             reader.readLine();
 

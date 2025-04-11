@@ -252,4 +252,71 @@ public class GameUI {
     public void displayInfoMessage(String message) {
         System.out.println("\u001B[34m" + message + "\u001B[0m");
     }
+    
+    /**
+     * Displays the game map and highlights special spaces and characters
+     * @param world The game world
+     * @param heroes List of heroes
+     * @param monsters List of monsters
+     */
+    public void displayMap(lovWorld world, List<Hero> heroes, List<Monster> monsters) {
+        System.out.println("\n=== World Map ===");
+        
+        Space[][] grid = world.grid;
+        
+        // Detect treasure chests and inform player
+        boolean hasTreasureChests = false;
+        
+        // Print top border
+        System.out.print("  ");
+        for (int j = 0; j < grid[0].length; j++) {
+            System.out.print("--");
+        }
+        System.out.println("-");
+        
+        for (int i = 0; i < grid.length; i++) {
+            System.out.print(i + " |");
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] instanceof TreasureChest) {
+                    hasTreasureChests = true;
+                    // Print in yellow for treasure chests
+                    System.out.print("\u001B[33m" + grid[i][j].getSymbol() + "\u001B[0m ");
+                } else if (grid[i][j].getOccupant() instanceof Hero) {
+                    // Print in green for heroes
+                    System.out.print("\u001B[32m" + grid[i][j].getSymbol() + "\u001B[0m ");
+                } else if (grid[i][j].getOccupant() instanceof Monster) {
+                    // Print in red for monsters
+                    System.out.print("\u001B[31m" + grid[i][j].getSymbol() + "\u001B[0m ");
+                } else if (grid[i][j] instanceof NexusSpace) {
+                    // Print in cyan for nexus spaces
+                    System.out.print("\u001B[36m" + grid[i][j].getSymbol() + "\u001B[0m ");
+                } else if (grid[i][j] instanceof InaccessibleSpace) {
+                    // Print in dark gray for inaccessible
+                    System.out.print("\u001B[90m" + grid[i][j].getSymbol() + "\u001B[0m ");
+                } else {
+                    System.out.print(grid[i][j].getSymbol() + " ");
+                }
+            }
+            System.out.println("|");
+        }
+        
+        // Print bottom border
+        System.out.print("  ");
+        for (int j = 0; j < grid[0].length; j++) {
+            System.out.print("--");
+        }
+        System.out.println("-");
+        
+        // Print column numbers
+        System.out.print("   ");
+        for (int j = 0; j < grid[0].length; j++) {
+            System.out.print(j + " ");
+        }
+        System.out.println();
+        
+        // Show special message for treasure chests
+        if (hasTreasureChests) {
+            System.out.println("\u001B[33m★\u001B[0m - Treasure chests detected! Move onto them to collect rewards.");
+        }
+    }
 } 

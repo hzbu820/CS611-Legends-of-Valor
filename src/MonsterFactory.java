@@ -85,7 +85,7 @@ public class MonsterFactory {
         String filename = monsterType + "s.txt";  // e.g., Dragons.txt
         List<MonsterData> matchingMonsters = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/data/"+ filename))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FilePathHelper.getDataFilePath(filename)))) {
             // Skip the first line
             reader.readLine();
 

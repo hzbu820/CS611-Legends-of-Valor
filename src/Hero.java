@@ -3,11 +3,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Defines the Hero character type with specific attributes such as health, mana, and other attributes. Heroes
- * are player-controlled characters that may gain experience points, level up, and acquire items.
+ * Hero class - the playable characters in our game.
+ * 
+ * These are the good guys that you control. They have health, mana, and special
+ * attributes that increase as they level up. Heroes can buy items, equip weapons
+ * and armor, learn spells, and battle monsters.
  */
-
-
 
 public class Hero extends Character implements Attackable<Monster> {
     protected String name;
@@ -255,15 +256,30 @@ public class Hero extends Character implements Attackable<Monster> {
             return;
         }
         
-        // Calculate damage based on hero's strength and weapons
+        // Calculate base damage based on hero's strength and weapons
         int weaponDamage = inventory.useWeapon();
         double damageMultiplier = 0.05; // 5% of strength per point
-        int damage = (int)(getCurrentStrength() * damageMultiplier * (weaponDamage > 0 ? weaponDamage : 1));
+        int baseDamage = (int)(getCurrentStrength() * damageMultiplier * (weaponDamage > 0 ? weaponDamage : 1));
         
-        monster.takeDamage(damage);
+        // Check for critical hit (15% chance)
+        boolean isCritical = random.nextDouble() < 0.15;
+        int finalDamage = baseDamage;
+        if (isCritical) {
+            // Double damage on critical hit
+            finalDamage *= 2;
+        }
         
-        // Use CombatLogger for the attack message
-        CombatLogger.getInstance().logHeroAttack(this, monster, damage, false);
+        // Apply damage to monster
+        monster.takeDamage(finalDamage);
+        
+        // Use appropriate CombatLogger method based on whether it was a critical hit
+        if (isCritical) {
+            // Critical hit - use regular logging for now
+            CombatLogger.getInstance().logHeroAttack(this, monster, finalDamage, false);
+            System.out.println("CRITICAL HIT! " + this.getName() + " deals double damage!");
+        } else {
+            CombatLogger.getInstance().logHeroAttack(this, monster, finalDamage, false);
+        }
     }
 
 

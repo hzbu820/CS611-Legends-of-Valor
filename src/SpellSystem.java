@@ -2,8 +2,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Manages all spell-related functionality in the game, including spell casting,
- * spell effects, and displaying spell information to the player.
+ * SpellSystem handles all the magic in the game.
+ * 
+ * This class manages the casting of spells, their effects on monsters,
+ * and keeps track of mana costs. It's basically the wizardry department
+ * of our game.
  */
 public class SpellSystem {
     private List<Hero> heroes;
@@ -17,10 +20,10 @@ public class SpellSystem {
     }
 
     /**
-     * Allows a hero to cast a spell on a monster.
+     * Let a hero cast a spell on a monster.
      * 
-     * @param hero The hero casting the spell
-     * @return true if a monster was defeated, false otherwise
+     * @param hero The spell-slinging hero
+     * @return true if we killed the monster, false if it's still kicking
      */
     public boolean castSpell(Hero hero) {
         // First check if the hero has any learned spells
@@ -136,10 +139,10 @@ public class SpellSystem {
     }
     
     /**
-     * Returns the ANSI color code for a given spell type.
+     * Gets the right color for each spell type.
      * 
      * @param spellType The type of spell
-     * @return The ANSI color code as a string
+     * @return The ANSI color code for terminal output
      */
     public String getSpellTypeColor(String spellType) {
         switch (spellType.toLowerCase()) {
@@ -155,10 +158,10 @@ public class SpellSystem {
     }
     
     /**
-     * Returns a description of the effect for a given spell type.
+     * Get a description of what each spell type does.
      * 
      * @param spellType The type of spell
-     * @return A description of the spell's effect
+     * @return A short description of the effect
      */
     public String getSpellEffectDescription(String spellType) {
         switch (spellType.toLowerCase()) {
@@ -174,10 +177,10 @@ public class SpellSystem {
     }
     
     /**
-     * Returns an action description for a given spell type.
+     * Gets a flashy description of the spell effect for battle messages.
      * 
      * @param spellType The type of spell
-     * @return An action description for the spell
+     * @return A dramatic description for the battle log
      */
     public String getSpellEffectActionDescription(String spellType) {
         switch (spellType.toLowerCase()) {
@@ -193,12 +196,14 @@ public class SpellSystem {
     }
 
     /**
-     * Casts a spell on a selected monster.
+     * Direct casting method - might use this later for AI or special events.
+     * 
      * @param hero The hero casting the spell
      * @param spell The spell to cast
      * @param target The monster target
-     * @return true if the spell was successfully cast
+     * @return true if the spell hit, false if something went wrong
      */
+    @SuppressWarnings("unused")
     private boolean castSpellOnMonster(Hero hero, Spell spell, Monster target) {
         if (hero == null || spell == null || target == null) {
             return false;

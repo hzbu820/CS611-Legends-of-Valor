@@ -51,6 +51,31 @@ public class GridManager {
         if (grid[7][5].getOccupant() != null) {
             grid[7][5].setOccupant(null); // Clear the previous occupant if necessary
         }
+        
+        // Add treasure chests to the map (15% chance for eligible cells)
+        placeTreasureChests();
+    }
+    
+    /**
+     * Places treasure chests randomly on the map
+     */
+    private void placeTreasureChests() {
+        Random random = new Random();
+        
+        // Loop through the grid (excluding nexus rows and inaccessible spaces)
+        for (int i = 1; i < 7; i++) {
+            for (int j = 0; j < 8; j++) {
+                // Skip inaccessible spaces
+                if (grid[i][j] instanceof InaccessibleSpace) {
+                    continue;
+                }
+                
+                // 15% chance to place a mystery space (hidden treasure chest)
+                if (random.nextDouble() < 0.15) {
+                    grid[i][j] = new MysterySpace();
+                }
+            }
+        }
     }
 
     /**

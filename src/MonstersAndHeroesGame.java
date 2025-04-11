@@ -123,28 +123,34 @@ public class MonstersAndHeroesGame {
             System.out.println("\nSelecting Hero " + (i + 1) + ":");
             
             // Choose hero class
-            System.out.println("Choose a hero class:");
-            System.out.println("1. Warrior (High Strength and Agility)");
-            System.out.println("2. Sorcerer (High Mana and Dexterity)");
-            System.out.println("3. Paladin (High Strength and Dexterity)");
+            String heroClass = "";
+            boolean validClassChoice = false;
             
-            int classChoice = InputHandler.getInstance().getIntInput("Enter your choice (1-3): ");
-            
-            String heroClass;
-            switch (classChoice) {
-                case 1:
-                    heroClass = "Warrior";
-                    break;
-                case 2:
-                    heroClass = "Sorcerer";
-                    break;
-                case 3:
-                    heroClass = "Paladin";
-                    break;
-                default:
-                    System.out.println("Invalid choice. Defaulting to Warrior.");
-                    heroClass = "Warrior";
-                    break;
+            while (!validClassChoice) {
+                System.out.println("Choose a hero class:");
+                System.out.println("1. Warrior (High Strength and Agility)");
+                System.out.println("2. Sorcerer (High Mana and Dexterity)");
+                System.out.println("3. Paladin (High Strength and Dexterity)");
+                
+                int classChoice = InputHandler.getInstance().getIntInput("Enter your choice (1-3): ");
+                
+                switch (classChoice) {
+                    case 1:
+                        heroClass = "Warrior";
+                        validClassChoice = true;
+                        break;
+                    case 2:
+                        heroClass = "Sorcerer";
+                        validClassChoice = true;
+                        break;
+                    case 3:
+                        heroClass = "Paladin";
+                        validClassChoice = true;
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please enter a number between 1 and 3.");
+                        break;
+                }
             }
             
             // Choose a hero from the selected class
